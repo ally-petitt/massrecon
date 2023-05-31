@@ -1,24 +1,12 @@
-```
-  _     ____  ____ ___  _ ____  _____ ____ ____  _
- / \   /  _ \/_   \\  \///  __\/  __//   _Y  _ \/ \  /|
- | |   | / \| /   / \  / |  \/||  \  |  / | / \|| |\ ||
- | |_/\| |-||/   /_ / /  |    /|  /_ |  \_| \_/|| | \||
- \____/\_/ \|\____//_/   \_/\_\\____\\____|____/\_/  \|
-
-```
-
 # Usage
 
-`./lazyrecon.sh -d domain.com`
-
-To exclude particular subdomains:
-
-`./lazyrecon.sh -d domain.com -e excluded.domain.com,other.domain.com`
+`./massrecon.sh -s scope.txt`
 
 # About
 
-LazyRecon is a script written in Bash, it is intended to automate some tedious tasks of reconnaissance and information gathering.
-This tool allows you to gather some information that should help you identify what to do next and where to look.
+MassRecon is a script written in Bash, it is intended to automate some tedious tasks of reconnaissance and information gathering.
+This tool allows you to gather some information that should help you identify what to do next and where to look. Originally forked from nahamsec/lazyrecon.
+The main difference is that this adaptation of the script is quieter, more respecting of scope, uses different tools, cleaner output, and performs more thorough enumeration.
 
 
 # Main Features 
@@ -72,16 +60,4 @@ This script makes use of tools developped by the following people
 - [B. Blechschmidt - Blechschmidt](https://github.com/blechschmidt)
 - [Thomas D. - Maaaaz](https://github.com/maaaaz)
 - [Daniel Miessler - Danielmiessler](https://github.com/danielmiessler)
-
-
-# TO DO
-- Report only mode to generate reports for old dirsearch data
-
-
-
-
-
-
-**Warning:** This code was originally created for personal use, it generates a substantial amount of traffic, please use with caution. 
-
 

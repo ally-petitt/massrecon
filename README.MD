@@ -45,12 +45,15 @@ The main difference is that this adaptation of the script is quieter, more respe
 
 
 # Installation & Requirements
-- Download the install script from https://github.com/nahamsec/bbht.
-- Go version 1.10 or later.
+- Have Bash installed
+- Install dependencies by running `./install_dependencies.sh`
 
 ### System Requirements
 - Recommended to run on vps with 1VCPU and 2GB ram.
 
+## TODO:
+* strip whitespace from targets
+* hande regex in scope.txt more robustly
 
 
 # Authors and Thanks

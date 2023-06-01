@@ -1,5 +1,9 @@
 #!/bin/bash
+# Note: This is a pretty rough and quick script. Not optimal
+# but I hope to optimize it in the future.
 
+export PS4="\$LINENO: "
+set -xv
 
 ########################################
 #                                       
@@ -45,9 +49,49 @@ done
 
 shift $((OPTIND - 1))
 
-if [ -z "${scope}"]; then
+if [ -z "${scope}" ]
+   then
    usage; exit 1;
 fi
+
+
+recon(){
+
+  
+  if [[ "$target" =~ ^\*.*$ ]] # make a more robust way to handle regex in the future.
+  then
+    target=${target:2} # remove wildcard from front of target
+    echo "${red}Performing passive subdomain enum on $target"
+    find_subdomains $target
+  fi
+  echo "$target" >> $outputdir/all_domains.txt
+
+  dig @1.1.1.1 $target >> ./$outputdir/${target}_dig.out
+
+  ## gau, katana, 
+ 
+  # echo "Starting discovery..."
+  # discovery $domain
+  # cat ./$domain/$foldername/$domain.txt | sort -u > ./$domain/$foldername/$domain.txt
+
+}
+
+
+find_subdomains() {
+ echo "${red}Listing subdomains using sublister..."
+  sublist3r -d $target -t 10 -v -o ./$outputdir/${target}_sublister.out > /dev/null
+  echo "${red}Checking certspotter..."
+  curl -s https://certspotter.com/api/v0/certs\?domain\=$target | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $target >> ./$outputdir/${target}_certspotter.out
+  curl -s "https://crt.sh/?q=${target}&output=json"| jq '.[].common_name' | sort -u | cut -d '"' -f 2 >> ${target}_cirtsh.out
+
+  echo "google dorking"
+  sd-goo.sh $target | sort -u > sd-goo.sh
+
+  
+}
+
+
+
 
 discovery(){
 	hostalive $domain
@@ -95,20 +139,6 @@ echo "$(cat ./$domain/$foldername/urllist.txt | sort -u)" > ./$domain/$foldernam
 echo  "${yellow}Total of $(wc -l ./$domain/$foldername/urllist.txt | awk '{print $1}') live subdomains were found${reset}"
 }
 
-recon(){
-
-  echo "${green}Recon started on $domain ${reset}"
-  echo "Listing subdomains using sublister..."
-  python ~/tools/Sublist3r/sublist3r.py -d $domain -t 10 -v -o ./$domain/$foldername/$domain.txt > /dev/null
-  echo "Checking certspotter..."
-  curl -s https://certspotter.com/api/v0/certs\?domain\=$domain | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $domain >> ./$domain/$foldername/$domain.txt
-  nsrecords $domain
-  excludedomains
-  echo "Starting discovery..."
-  discovery $domain
-  cat ./$domain/$foldername/$domain.txt | sort -u > ./$domain/$foldername/$domain.txt
-
-}
 
 # excludedomains(){
 #   # from @incredincomp with love <3
@@ -212,9 +242,9 @@ main(){
 
   mkdir -p ./$outputdir/
 
-  for domain in $(cat $scope)
+  for target in $(cat $scope)
   do 
-    recon $domain
+    recon $target
   done
 
   # master_report $domain # put results in json.

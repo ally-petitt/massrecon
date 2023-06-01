@@ -82,12 +82,12 @@ find_subdomains() {
   sublist3r -d $target -t 10 -v -o ./$outputdir/${target}_sublister.out > /dev/null
   echo "${red}Checking certspotter..."
   curl -s https://certspotter.com/api/v0/certs\?domain\=$target | jq '.[].dns_names[]' | sed 's/\"//g' | sed 's/\*\.//g' | sort -u | grep $target >> ./$outputdir/${target}_certspotter.out
-  curl -s "https://crt.sh/?q=${target}&output=json"| jq '.[].common_name' | sort -u | cut -d '"' -f 2 >> ${target}_cirtsh.out
+  curl -s "https://crt.sh/?q=${target}&output=json"| jq '.[].common_name' | sort -u | cut -d '"' -f 2 >> $outputdir/${target}_cirtsh.out
 
   echo "google dorking"
   sd-goo.sh $target | sort -u > sd-goo.sh
 
-  
+
 }
 
 
